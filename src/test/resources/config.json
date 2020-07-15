@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "delta": 5,
+  "filter": {
+    "filterClass": "com.backwardsnode.skygrid.filter.EmptyFilter",
+    "exclusionList": [],
+    "inclusionList": []
+  },
+  "weight": {
+    "weightClass": "com.backwardsnode.skygrid.weight.UniformWeight",
+    "types": {
+      "DIRT": 1000,
+      "STONE": 300
+    }
+  },
+  "randomizeSpawners": true,
+  "blockAttemptGenerators": [
+    "com.backwardsnode.skygrid.generator.FarmlandGenerator",
+    "com.backwardsnode.skygrid.generator.CactusGenerator;0.5",
+    "com.backwardsnode.skygrid.generator.SugarCaneGenerator",
+    "com.backwardsnode.skygrid.generator.BambooGenerator;0.1",
+    "com.backwardsnode.skygrid.generator.BellGenerator",
+    "com.backwardsnode.skygrid.generator.FloraGenerator",
+    "com.backwardsnode.skygrid.generator.LanternGenerator"
+  ]
+}
