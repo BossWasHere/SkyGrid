@@ -1,0 +1,7 @@
+main: com.backwardsnode.skygrid.Plugin
+name: SkyGrid
+version: ${plugin.version}
+description: Sky Grid Block World Chunk Generator for Minecraft
+author: BackwardsNode
+api-version: 1.15
+load: STARTUP
