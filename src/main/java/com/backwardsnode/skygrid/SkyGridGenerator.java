@@ -14,7 +14,8 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.type.Stairs;
+import org.bukkit.block.data.Directional;
+import org.bukkit.block.data.type.Leaves;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 
@@ -60,7 +61,8 @@ public class SkyGridGenerator extends ChunkGenerator {
 	private int delta = -1;
 	private BlockFilter filter;
 	private BlockWeight weight;
-	private List<BlockAttemptGenerator> generators;
+	private List<WeightedBlockAttemptGenerator> generators;
+	private boolean randomizeSpawners;
 	
 	private FilterConfig secondPass;
 	private final WeightedList<Material> materialSelection;
@@ -71,7 +73,7 @@ public class SkyGridGenerator extends ChunkGenerator {
 	 * @param id Name of configuration file, given as '#Name'
 	 */
 	public SkyGridGenerator(Plugin instance, String id) {
-		generators = new ArrayList<BlockAttemptGenerator>();
+		generators = new ArrayList<WeightedBlockAttemptGenerator>();
 		
 		boolean loaded = false;
 		if (id != null && id.startsWith("#")) {
@@ -84,13 +86,13 @@ public class SkyGridGenerator extends ChunkGenerator {
 			filter = new AlphaFilter();
 			weight = new AlphaWeight();
 			
-			generators.add(new FarmlandGenerator());
-			generators.add(new CactusGenerator());
-			generators.add(new SugarCaneGenerator());
-			generators.add(new BambooGenerator());
-			generators.add(new BellGenerator());
-			generators.add(new FloraGenerator());
-			generators.add(new LanternGenerator());
+			generators.add(new WeightedBlockAttemptGenerator(new FarmlandGenerator()));
+			generators.add(new WeightedBlockAttemptGenerator(new CactusGenerator()));
+			generators.add(new WeightedBlockAttemptGenerator(new SugarCaneGenerator()));
+			generators.add(new WeightedBlockAttemptGenerator(new BambooGenerator()));
+			generators.add(new WeightedBlockAttemptGenerator(new BellGenerator()));
+			generators.add(new WeightedBlockAttemptGenerator(new FloraGenerator()));
+			generators.add(new WeightedBlockAttemptGenerator(new LanternGenerator()));
 		}
 		
 		materialSelection = new WeightedList<Material>(filter.estimatedSelectionSize());
@@ -113,7 +115,7 @@ public class SkyGridGenerator extends ChunkGenerator {
 	}
 	
 	private boolean loadConfiguration(Plugin instance, String fileName) {
-		File file = new File(instance.getDataFolder(), fileName.endsWith(".json") ? fileName : fileName + ".json");
+		File file = new File(instance.getConfigFolder(), fileName.endsWith(".json") ? fileName : fileName + ".json");
 		fileName = file.getName();
 		if (!file.exists()) {
 			instance.getLogger().warning("Could not load generator config for file " + fileName + " - The file does not exist");
@@ -142,13 +144,23 @@ public class SkyGridGenerator extends ChunkGenerator {
 					} else {
 						secondPass = null;
 					}
+					randomizeSpawners = config.randomizeSpawners;
 					BlockAttemptGenerator bag = null;
+					String[] components = null;
+					boolean useDefault = true;
 					for (String genClassName : config.blockAttemptGenerators) {
-						bag = createInstance(BlockAttemptGenerator.class, genClassName);
+						components = genClassName.split(";");
+						if (components.length > 1) {
+							bag = createInstance(BlockAttemptGenerator.class, components[0]);
+							useDefault = false;
+						} else {
+							bag = createInstance(BlockAttemptGenerator.class, genClassName);
+							useDefault = true;
+						}
 						if (bag == null) {
 							instance.getLogger().warning("Could not load generator class " + genClassName);
 						} else {
-							generators.add(bag);
+							generators.add(new WeightedBlockAttemptGenerator(bag, useDefault ? bag.getDefaultGeneratorChance() : safeDouble(components[1], 0)));
 						}
 					}
 					success = true;
@@ -183,6 +195,14 @@ public class SkyGridGenerator extends ChunkGenerator {
 		return null;
 	}
 	
+	private double safeDouble(String str, double def) {
+		try {
+			return Double.parseDouble(str);
+		} catch (Exception e) {
+			return def;
+		}
+	}
+	
 	@Override
 	public boolean canSpawn(World world, int x, int z) {
 		return super.canSpawn(world, x, z);
@@ -208,8 +228,10 @@ public class SkyGridGenerator extends ChunkGenerator {
 					/*
 					 * BlockData modifiers
 					 */
-					if (bd instanceof Stairs) {
-						((Stairs)bd).setFacing(getRandomFacing(random));
+					if (bd instanceof Directional) {
+						((Directional)bd).setFacing(getRandomFacing(random));
+					} else if (bd instanceof Leaves) {
+						((Leaves)bd).setPersistent(true);
 					}
 					
 					chunk.setBlock(kX, kY, kZ, bd);
@@ -229,34 +251,34 @@ public class SkyGridGenerator extends ChunkGenerator {
 					/*
 					 * Start Other Generation
 					 */
-					for (BlockAttemptGenerator bag : generators) {
-						if (bag.canGenerateOn(bd)) {
-							switch (bag.getGenerateCondition()) {
+					for (WeightedBlockAttemptGenerator wbag : generators) {
+						if (wbag.canGenerateOn(bd)) {
+							switch (wbag.getGenerateCondition()) {
 							case BOTTOM:
 								if (!setBottom) {
-									if (bag.getGeneratorChance() < random.nextDouble()) break;
-									chunk.setBlock(kX, kY - 1, kZ, bag.getBlockData(bd, random));
+									if (wbag.getPreferredChance() < random.nextDouble()) break;
+									chunk.setBlock(kX, kY - 1, kZ, wbag.getBlockData(bd, random));
 									setBottom = true;
 								}
 								break;
 							case SIDE:
 								if (!setSide) {
-									if (bag.getGeneratorChance() < random.nextDouble()) break;
+									if (wbag.getPreferredChance() < random.nextDouble()) break;
 									setSide = true;
 									// Not yet implemented
 								}
 								break;
 							case SIDE_MULTI:
 								if (!setSide) {
-									if (bag.getGeneratorChance() < random.nextDouble()) break;
+									if (wbag.getPreferredChance() < random.nextDouble()) break;
 									setSide = true;
 									// Not yet implemented
 								}
 								break;
 							case TOP:
 								if (!setTop) {
-									if (bag.getGeneratorChance() < random.nextDouble()) break;
-									chunk.setBlock(kX, kY + 1, kZ, bag.getBlockData(bd, random));
+									if (wbag.getPreferredChance() < random.nextDouble()) break;
+									chunk.setBlock(kX, kY + 1, kZ, wbag.getBlockData(bd, random));
 									setTop = true;
 								}
 								break;
@@ -309,6 +331,10 @@ public class SkyGridGenerator extends ChunkGenerator {
 	@Override
 	public boolean shouldGenerateStructures() {
 		return false;
+	}
+	
+	public boolean doSpawnerRandomizing() {
+		return randomizeSpawners;
 	}
 	
 	public static BlockFace getRandomFacing(Random randomSource) {

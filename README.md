@@ -35,11 +35,12 @@ You can use custom generator settings by providing a generator ID to load a file
   "weight": {
     "weightClass": "com.backwardsnode.skygrid.weight.SurvivalWeight"
   },
+  "randomizeSpawners": true,
   "blockAttemptGenerators": [
     "com.backwardsnode.skygrid.generator.FarmlandGenerator",
-    "com.backwardsnode.skygrid.generator.CactusGenerator",
+    "com.backwardsnode.skygrid.generator.CactusGenerator;1",
     "com.backwardsnode.skygrid.generator.SugarCaneGenerator",
-    "com.backwardsnode.skygrid.generator.BambooGenerator",
+    "com.backwardsnode.skygrid.generator.BambooGenerator;0.1",
     "com.backwardsnode.skygrid.generator.BellGenerator",
     "com.backwardsnode.skygrid.generator.FloraGenerator",
     "com.backwardsnode.skygrid.generator.LanternGenerator"
@@ -52,6 +53,7 @@ You can use custom generator settings by providing a generator ID to load a file
 - **exclusionList**: List of blocks not to generate in addition to the filter class
 - **inclusionList**: List of blocks to generate even if they are excluded by the filter class
 - **weightClass**: The name of the internal class to use for block weighing
+- **randomizeSpawners**: If monster spawners should have random entity types
 - **blockAttemptGenerators**: Further generation around blocks (see below)
 
 #### Filters, Weights and BAGs
@@ -70,7 +72,9 @@ The probability that a specific block is generated is given by a weight.
 >com.backwardsnode.skygrid.weight.AlphaWeight - Weight for initial testing (may be removed)\
 >com.backwardsnode.skygrid.weight.SurvivalWeight - Used for survival generation
 
-Block Attempt Generators (BAGs) are similar to block populators, but are applied immediately after a block is generated. They allow for control over what block to generate on the top, bottom or sides of a block in the grid.
+Block Attempt Generators (BAGs) are similar to block populators, but are applied immediately after a block is generated.
+They allow for control over what block to generate on the top, bottom or sides of a block in the grid.
+**To specify a weight for these generators, place a ';' at the end of the class name followed by the chance of the generator running.**
 >**Current BAGs:**\
 >com.backwardsnode.skygrid.generator.FarmlandGenerator - Plants crops on top of farmland\
 >com.backwardsnode.skygrid.generator.CactusGenerator - Plants cactus on top of sand/red sand\
@@ -85,13 +89,12 @@ Block Attempt Generators (BAGs) are similar to block populators, but are applied
   - This doesn't apply to lava
   - Flowing water updates gravity blocks
 - Configuration files cannot yet specify block weights
-- Spawners always generate with Pig as their default mob
+- Spawners cannot have entity type weights
 - Gravity blocks like sand and gravel fall when blocks like cactus and bamboo grow
-- Block Attempt Generators cannot have their weights configured by a file
 
 ## Building
 SkyGrid uses Maven for building and dependency management. To build:
->mvn clean package
+>$ mvn clean package
 
 The JAR can be found in the /target folder.
 

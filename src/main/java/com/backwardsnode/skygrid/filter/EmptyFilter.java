@@ -10,5 +10,4 @@ public class EmptyFilter implements BlockFilter {
 	public boolean includeMaterial(Material material) {
 		return material.isBlock();
 	}
-
 }

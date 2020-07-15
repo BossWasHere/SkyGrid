@@ -26,8 +26,8 @@ public class BellGenerator implements BlockAttemptGenerator {
 		}
 	}
 	
-	public double getGeneratorChance() {
-		return 0.005;
+	public double getDefaultGeneratorChance() {
+		return 0.0001;
 	}
 	
 	public SpawnCondition getGenerateCondition() {

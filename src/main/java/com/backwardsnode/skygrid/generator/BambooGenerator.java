@@ -29,8 +29,8 @@ public class BambooGenerator implements BlockAttemptGenerator {
 		}
 	}
 	
-	public double getGeneratorChance() {
-		return 0.01;
+	public double getDefaultGeneratorChance() {
+		return 0.02;
 	}
 	
 	public SpawnCondition getGenerateCondition() {

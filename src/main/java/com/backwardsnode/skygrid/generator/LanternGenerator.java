@@ -17,7 +17,7 @@ public class LanternGenerator implements BlockAttemptGenerator {
 		return block.getMaterial().isSolid();
 	}
 	
-	public double getGeneratorChance() {
+	public double getDefaultGeneratorChance() {
 		return 0.005;
 	}
 	

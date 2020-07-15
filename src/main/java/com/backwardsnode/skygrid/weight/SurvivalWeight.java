@@ -57,15 +57,12 @@ public class SurvivalWeight implements BlockWeight {
 		case DIAMOND_ORE:
 		case EMERALD_ORE:
 			return 20;
-		case ANCIENT_DEBRIS:
+		case BOOKSHELF:
 			return 10;
-		case NETHER_PORTAL:
-		case ENDER_CHEST:
 		case SPAWNER:
+		case ANCIENT_DEBRIS:
 			return 5;
-		case BEACON:
 		case END_PORTAL:
-		case ENCHANTING_TABLE:
 			return 1;
 		default: 
 			return 25;

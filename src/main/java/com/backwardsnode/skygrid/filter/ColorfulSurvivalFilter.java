@@ -38,6 +38,7 @@ public class ColorfulSurvivalFilter extends AlphaFilter {
 		case CRAFTING_TABLE:
 		case CHEST:
 		case TRAPPED_CHEST:
+		case ENDER_CHEST:
 		case CARVED_PUMPKIN:
 		case JACK_O_LANTERN:
 		case PISTON:
@@ -61,12 +62,14 @@ public class ColorfulSurvivalFilter extends AlphaFilter {
 		case CAKE:
 		case CHAIN:
 		case BELL:
+		case BEACON:
 		
 		/*
 		 * Resource Blocks
 		 */
 		case IRON_BLOCK:
 		case GOLD_BLOCK:
+		case REDSTONE_BLOCK:
 		case LAPIS_BLOCK:
 		case EMERALD_BLOCK:
 		case DIAMOND_BLOCK:

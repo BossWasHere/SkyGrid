@@ -8,7 +8,7 @@ public interface BlockAttemptGenerator {
 
 	public boolean canGenerateOn(BlockData block);
 	public SpawnCondition getGenerateCondition();
-	public double getGeneratorChance();
+	public double getDefaultGeneratorChance();
 	public BlockData getBlockData(BlockData basedOn, Random random);
 	
 }

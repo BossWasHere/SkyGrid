@@ -22,7 +22,7 @@ public class CactusGenerator implements BlockAttemptGenerator {
 		}
 	}
 	
-	public double getGeneratorChance() {
+	public double getDefaultGeneratorChance() {
 		return 0.1;
 	}
 	

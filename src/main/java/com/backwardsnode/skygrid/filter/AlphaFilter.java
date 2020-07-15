@@ -140,8 +140,9 @@ public class AlphaFilter implements BlockFilter {
 		case HEAVY_WEIGHTED_PRESSURE_PLATE:
 		case LIGHT_WEIGHTED_PRESSURE_PLATE:
 		/*
-		 * Other
+		 * Dangerous
 		 */
+		case IRON_BARS:
 		case OAK_FENCE:
 		case SPRUCE_FENCE:
 		case BIRCH_FENCE:
@@ -177,7 +178,10 @@ public class AlphaFilter implements BlockFilter {
 		case GREEN_STAINED_GLASS_PANE:
 		case RED_STAINED_GLASS_PANE:
 		case BLACK_STAINED_GLASS_PANE:
-		
+
+		/*
+		 * Other
+		 */
 		case SHULKER_BOX:
 		case WHITE_SHULKER_BOX:
 		case ORANGE_SHULKER_BOX:

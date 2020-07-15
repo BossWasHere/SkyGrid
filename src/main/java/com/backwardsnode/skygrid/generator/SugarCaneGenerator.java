@@ -26,7 +26,7 @@ public class SugarCaneGenerator implements BlockAttemptGenerator {
 		}
 	}
 	
-	public double getGeneratorChance() {
+	public double getDefaultGeneratorChance() {
 		return 0.01;
 	}
 	

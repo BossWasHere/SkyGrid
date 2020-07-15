@@ -22,8 +22,8 @@ public class FloraGenerator implements BlockAttemptGenerator {
 		}
 	}
 	
-	public double getGeneratorChance() {
-		return 0.4;
+	public double getDefaultGeneratorChance() {
+		return 0.5;
 	}
 	
 	public SpawnCondition getGenerateCondition() {

@@ -8,6 +8,7 @@ public class GeneratorConfig {
 	public int delta;
 	public FilterConfig filter;
 	public WeightConfig weight;
+	public boolean randomizeSpawners;
 	public List<String> blockAttemptGenerators;
 	
 	

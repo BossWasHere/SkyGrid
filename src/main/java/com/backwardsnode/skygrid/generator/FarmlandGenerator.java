@@ -16,7 +16,7 @@ public class FarmlandGenerator implements BlockAttemptGenerator {
 		return block.getMaterial().equals(Material.FARMLAND);
 	}
 	
-	public double getGeneratorChance() {
+	public double getDefaultGeneratorChance() {
 		return 0.9;
 	}
 	
